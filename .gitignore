@@ -1,0 +1,28 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ---- PyInstaller ----
+build/
+dist/
+*.spec
+
+# ---- 运行时产物（含本机 IP / 目标设备信息，不要提交）----
+config.json
+vnc_last.log
+*.log
+
+# ---- 便携 VNC 客户端（第三方 GPL 二进制，仓库不分发）----
+bin/
+*.exe
+*.dll
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
