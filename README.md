@@ -15,6 +15,21 @@
 - 而 macOS 自带的「屏幕共享」本身就是一个标准 RFB/VNC 服务端，只要在系统
   设置里勾选就能用 —— 所以只需要一个趁手的「客户端外壳」。
 
+## 下载与安装
+
+去 [Releases](https://github.com/congyb001/MacRemote/releases) 页下载，两种形态任选：
+
+| 包 | 文件 | 说明 |
+|---|---|---|
+| 安装版 | `MacRemote-Setup-1.0.0.exe` | 双击安装，**不需要管理员权限**（装到 `%LOCALAPPDATA%\Programs\MacRemote`），带开始菜单项、可选桌面快捷方式、标准卸载入口 |
+| 便携版 | `MacRemote-Portable-1.0.0.zip` | 解压到任意目录，双击 `Mac远控.exe` 即用，不写注册表 |
+
+两个包都已内置 TigerVNC 1.16.2 便携客户端（安装时可在「组件」页取消勾选），
+并附带 GPL 许可证原文与第三方组件声明。
+
+> 安装包和主程序**没有代码签名**，Windows SmartScreen 可能提示「已保护你的电脑」，
+> 点「更多信息 → 仍要运行」即可。
+
 ## 界面
 
 ![界面截图](docs/screenshot.png)
@@ -98,6 +113,25 @@ python -m PyInstaller --noconfirm --onefile --windowed --name "Mac远控" `
 产物是单文件 exe。**注意：exe 内部不含 VNC 客户端**，客户端需要放在
 `bin\TigerVNC\vncviewer.exe`（程序内「准备 VNC 客户端」可自动安装）。
 
+### 打包安装包 / 便携包
+
+需要 [Inno Setup 6](https://jrsoftware.org/isinfo.php)（脚本会自己补简体中文语言文件）：
+
+```powershell
+pwsh -File installer/build-installer.ps1
+# 可选参数：-AppExe <主程序路径> -AppDir <客户端目录> -Version 1.0.1
+```
+
+产物落在 `installer/dist/`：
+
+- `MacRemote-Setup-<版本>.exe` —— 安装版（免管理员，装到 `%LOCALAPPDATA%\Programs\MacRemote`）
+- `MacRemote-Portable-<版本>.zip` —— 便携版
+
+> ⚠️ 这两个包里会打进去 TigerVNC 的 `vncviewer.exe`（GPL-2.0）。
+> 对外分发前请按 [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) 履行 GPL 义务：
+> 附许可证原文（安装包已自动带上 `bin\TigerVNC\LICENCE.TXT`）、提供对应源码或有效承诺、
+> 不附加额外限制。本仓库的 Releases 已同时提供源码（就是这个仓库）与上游地址。
+
 ## 已知限制
 
 - **没有画面缩放**：内置 TigerVNC 1.16.2 移除了 `-Scaling` / `-FitWindow`
@@ -127,6 +161,10 @@ MacRemote/
 ├── make_icon.py            图标生成脚本（Pillow）
 ├── LICENSE                 MIT（仅覆盖本项目原创代码）
 ├── THIRD-PARTY-NOTICES.txt 第三方组件与许可说明（含 GPL 义务清单）
+├── installer/
+│   ├── installer.iss       Inno Setup 安装包脚本
+│   ├── build-installer.ps1 一键出安装包 + 便携包
+│   └── BEFORE-INSTALL.txt  安装前须知（显示在安装向导里）
 └── docs/
     ├── 使用说明.txt         给最终用户的操作说明
     ├── Mac 端设置.txt       Mac 那边的一次性设置

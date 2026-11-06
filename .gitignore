@@ -20,6 +20,11 @@ bin/
 *.exe
 *.dll
 
+# ---- 安装包构建中间件与产物 ----
+installer/stage/
+installer/stage-vnc/
+installer/dist/
+
 # ---- 编辑器 / 系统 ----
 .vscode/
 .idea/
